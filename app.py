@@ -193,14 +193,19 @@ elif page == "Prediction":
             ]
         })
 
-        fig = px.bar(
-            chart_data,
-            x="Academic Factors",
-            y="Values",
-            color="Academic Factors",
-            text="Values",
-            color_discrete_sequence=[
-                "#A855F7", "#C084FC", "#7C3AED", "#E9D5FF"
+       fig = px.bar(
+    chart_data,
+    x="Academic Factors",
+    y="Values",
+    text="Values",
+    color_discrete_sequence=["#C084FC"]
+)
+
+fig.update_traces(
+    marker_line_color="#E9D5FF",
+    marker_line_width=1,
+    textfont_color="white"
+)
             ]
         )
 
