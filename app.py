@@ -1,9 +1,13 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import os
 
 # Load trained model
-model = joblib.load("model/model.pkl")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "model", "model.pkl")
+
+model = joblib.load(MODEL_PATH)
 
 st.set_page_config(page_title="Student Performance Predictor")
 
@@ -19,10 +23,10 @@ previous_score = st.number_input("Previous Exam Score", min_value=0, max_value=1
 if st.button("Predict Final Score"):
 
     input_data = pd.DataFrame({
-        "StudyHours":[study_hours],
-        "Attendance":[attendance],
-        "Assignments":[assignments],
-        "PreviousScore":[previous_score]
+        "StudyHours": [study_hours],
+        "Attendance": [attendance],
+        "Assignments": [assignments],
+        "PreviousScore": [previous_score]
     })
 
     prediction = model.predict(input_data)
