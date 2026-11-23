@@ -14,45 +14,104 @@ st.set_page_config(
     layout="wide"
 )
 
-# PURPLE THEME
+# PINK AND PURPLE THEME
 st.markdown("""
 <style>
+
 .stApp {
-    background: linear-gradient(135deg, #160D2B, #241343, #32195A);
-    color: white;
+    background: linear-gradient(
+        135deg,
+        #2B0A3D,
+        #59145E,
+        #8A216F,
+        #45105D
+    );
+    color: #FFD6F5;
 }
 
 [data-testid="stSidebar"] {
-    background-color: #1C1035;
+    background: linear-gradient(
+        180deg,
+        #351044,
+        #70205F,
+        #4B155C
+    );
 }
 
-h1, h2, h3, p, label {
-    color: white !important;
+h1, h2, h3, h4, p, label {
+    color: #FFD6F5 !important;
 }
 
 .hero {
+    background: linear-gradient(
+        120deg,
+        #8E287F,
+        #D946A6,
+        #9235B8
+    );
     padding: 30px;
-    border-radius: 20px;
-    background: linear-gradient(120deg, #7138C8, #A66BEE);
+    border-radius: 22px;
     text-align: center;
-    margin-bottom: 20px;
+    border: 1px solid #F472C5;
 }
 
 .card {
-    background: #352052;
+    background: linear-gradient(
+        135deg,
+        #65205F,
+        #A32C83
+    );
     padding: 22px;
-    border-radius: 16px;
+    border-radius: 18px;
     text-align: center;
-    border: 1px solid #7046A5;
+    border: 1px solid #E879C9;
 }
 
 div.stButton > button {
-    background: linear-gradient(90deg, #9147E8, #C084FC);
-    color: white;
-    border-radius: 12px;
-    border: none;
+    background: linear-gradient(
+        90deg,
+        #C02691,
+        #9333EA,
+        #DB2777
+    );
+    color: #FFE4F5;
+    border: 1px solid #F472C5;
+    border-radius: 14px;
     font-weight: bold;
 }
+
+div.stButton > button:hover {
+    background: linear-gradient(
+        90deg,
+        #DB2777,
+        #A855F7
+    );
+    color: #FFFFFF;
+}
+
+[data-testid="stMetric"] {
+    background: #64205F;
+    padding: 15px;
+    border-radius: 14px;
+    border: 1px solid #D946A6;
+}
+
+[data-testid="stProgressBar"] > div > div {
+    background: linear-gradient(
+        90deg,
+        #DB2777,
+        #C084FC
+    );
+}
+
+hr {
+    border-color: #C02691;
+}
+
+[data-testid="stSlider"] [role="slider"] {
+    background-color: #EC4899;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -81,6 +140,8 @@ if page == "Home":
     </div>
     """, unsafe_allow_html=True)
 
+    st.write("")
+
     col1, col2 = st.columns(2)
 
     with col1:
@@ -93,45 +154,49 @@ if page == "Home":
         st.subheader("Welcome to Our System")
 
         st.write("""
-        This system uses Machine Learning to predict
-        student academic performance.
+        Our Student Performance Prediction System
+        uses Machine Learning to estimate student
+        academic performance.
 
-        Enter student details and receive an estimated
-        final score with visual analysis.
+        Enter student details and receive an instant
+        prediction with interactive visual analysis.
+
+        Discover academic strengths and areas
+        that need improvement.
         """)
 
         st.success("AI Powered Academic Analysis")
 
     st.divider()
 
-    st.subheader("Our Features")
+    st.subheader("✨ Our Features")
 
     a, b, c = st.columns(3)
 
     with a:
         st.markdown("""
         <div class="card">
-        <h2>📊</h2>
-        <h3>Analytics</h3>
-        <p>Interactive performance charts</p>
+            <h2>📊</h2>
+            <h3>Smart Analytics</h3>
+            <p>Interactive performance charts</p>
         </div>
         """, unsafe_allow_html=True)
 
     with b:
         st.markdown("""
         <div class="card">
-        <h2>🤖</h2>
-        <h3>Prediction</h3>
-        <p>Machine Learning prediction</p>
+            <h2>🤖</h2>
+            <h3>AI Prediction</h3>
+            <p>Machine Learning based prediction</p>
         </div>
         """, unsafe_allow_html=True)
 
     with c:
         st.markdown("""
         <div class="card">
-        <h2>💡</h2>
-        <h3>Suggestions</h3>
-        <p>Academic improvement tips</p>
+            <h2>💡</h2>
+            <h3>Smart Suggestions</h3>
+            <p>Academic improvement tips</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -140,7 +205,9 @@ elif page == "Prediction":
 
     st.title("🔮 Student Performance Prediction")
 
-    st.write("Enter student academic details below.")
+    st.write(
+        "Enter the student's academic details below."
+    )
 
     col1, col2 = st.columns(2)
 
@@ -166,7 +233,12 @@ elif page == "Prediction":
             0, 100, 70
         )
 
-    if st.button("✨ Predict Final Score", use_container_width=True):
+    st.write("")
+
+    if st.button(
+        "✨ Predict Final Score",
+        use_container_width=True
+    ):
 
         input_data = pd.DataFrame({
             "StudyHours": [study_hours],
@@ -201,40 +273,58 @@ elif page == "Prediction":
 
             time.sleep(0.015)
 
-        st.progress(max(0.0, min(1.0, score / 100)))
+        st.progress(
+            max(0.0, min(1.0, score / 100))
+        )
 
         # PERFORMANCE SUGGESTIONS
         st.subheader("💡 Performance Analysis")
 
         if score >= 80:
+
             st.success("🌟 Excellent Performance!")
-            suggestion = (
-                "Keep maintaining your study routine. "
-                "Continue practicing and revising regularly."
-            )
+
+            suggestion = """
+            Keep maintaining your study routine.
+            Continue practicing and revising regularly.
+            """
 
         elif score >= 60:
+
             st.info("👍 Good Performance!")
-            suggestion = (
-                "Increase revision time and practice "
-                "more questions to improve your score."
-            )
+
+            suggestion = """
+            Increase revision time and practice
+            more questions to improve your score.
+            """
 
         elif score >= 40:
+
             st.warning("⚡ Average Performance")
-            suggestion = (
-                "Improve attendance, complete assignments "
-                "regularly and follow a daily study schedule."
-            )
+
+            suggestion = """
+            Improve attendance, complete assignments
+            regularly and follow a daily study schedule.
+            """
 
         else:
-            st.error("📚 Needs Improvement")
-            suggestion = (
-                "Focus on regular study, attend classes "
-                "and seek additional academic support."
-            )
 
-        st.write(suggestion)
+            st.error("📚 Needs Improvement")
+
+            suggestion = """
+            Focus on regular study, attend classes
+            and seek additional academic support.
+            """
+
+        st.markdown(
+            f"""
+            <div class="card">
+                <h3>💗 Your Improvement Plan</h3>
+                <p>{suggestion}</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
         st.divider()
 
@@ -256,27 +346,49 @@ elif page == "Prediction":
             ]
         })
 
+        colors = [
+            "#EC4899",
+            "#D946EF",
+            "#A855F7",
+            "#F472B6"
+        ]
+
         fig = px.bar(
             chart_data,
             x="Academic Factors",
             y="Values",
             text="Values",
-            color_discrete_sequence=["#C084FC"]
+            color="Academic Factors",
+            color_discrete_sequence=colors
         )
 
         fig.update_traces(
-            marker_line_color="#E9D5FF",
-            marker_line_width=1,
-            textfont_color="white"
+            texttemplate="%{y:.1f}",
+            textposition="outside",
+            textfont=dict(
+                color="#FFD6F5",
+                size=15
+            ),
+            marker_line_width=0
         )
 
         fig.update_layout(
             template="plotly_dark",
-            yaxis_range=[0, 100],
-            showlegend=False,
-            paper_bgcolor="#241343",
-            plot_bgcolor="#241343",
-            font_color="white"
+            paper_bgcolor="#351044",
+            plot_bgcolor="#351044",
+            font=dict(
+                color="#FFD6F5",
+                size=14
+            ),
+            yaxis=dict(
+                range=[0, 115],
+                title="Performance (%)",
+                gridcolor="#70205F"
+            ),
+            xaxis=dict(
+                title="Academic Factors"
+            ),
+            showlegend=False
         )
 
         st.plotly_chart(
@@ -284,31 +396,59 @@ elif page == "Prediction":
             use_container_width=True
         )
 
-        # SCORE GAUGE
+        # PINK AND PURPLE GAUGE
         st.subheader("🎯 Final Score Gauge")
 
         gauge = go.Figure(
             go.Indicator(
                 mode="gauge+number",
                 value=score,
-                title={"text": "Predicted Score"},
+                title={
+                    "text": "Predicted Score",
+                    "font": {
+                        "color": "#FFD6F5"
+                    }
+                },
+                number={
+                    "font": {
+                        "color": "#F472B6"
+                    }
+                },
                 gauge={
-                    "axis": {"range": [0, 100]},
-                    "bar": {"color": "#C084FC"},
+                    "axis": {
+                        "range": [0, 100],
+                        "tickcolor": "#FFD6F5"
+                    },
+                    "bar": {
+                        "color": "#EC4899"
+                    },
+                    "bgcolor": "#351044",
+                    "bordercolor": "#D946A6",
                     "steps": [
-                        {"range": [0, 40], "color": "#512044"},
-                        {"range": [40, 60], "color": "#7046A5"},
-                        {"range": [60, 80], "color": "#8B5CF6"},
-                        {"range": [80, 100], "color": "#A78BFA"}
+                        {
+                            "range": [0, 40],
+                            "color": "#581C48"
+                        },
+                        {
+                            "range": [40, 60],
+                            "color": "#861F69"
+                        },
+                        {
+                            "range": [60, 80],
+                            "color": "#A21CAF"
+                        },
+                        {
+                            "range": [80, 100],
+                            "color": "#7E22CE"
+                        }
                     ]
                 }
             )
         )
 
         gauge.update_layout(
-            template="plotly_dark",
-            paper_bgcolor="#241343",
-            font_color="white"
+            paper_bgcolor="#351044",
+            font_color="#FFD6F5"
         )
 
         st.plotly_chart(
