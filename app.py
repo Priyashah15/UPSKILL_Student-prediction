@@ -5,8 +5,7 @@ import os
 
 # Load trained model
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, "model", "model.pkl")
-
+MODEL_PATH = os.path.join(BASE_DIR, "Model", "model.pkl")
 model = joblib.load(MODEL_PATH)
 
 st.set_page_config(page_title="Student Performance Predictor")
