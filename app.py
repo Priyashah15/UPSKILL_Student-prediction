@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import joblib
@@ -6,30 +7,37 @@ import time
 import plotly.express as px
 import plotly.graph_objects as go
 
+# PAGE CONFIGURATION
 st.set_page_config(
     page_title="Student Performance Prediction",
     page_icon="🎓",
     layout="wide"
 )
 
+# PURPLE THEME
 st.markdown("""
 <style>
 .stApp {
-    background: linear-gradient(135deg,#160D2B,#241343,#32195A);
+    background: linear-gradient(135deg, #160D2B, #241343, #32195A);
     color: white;
 }
+
 [data-testid="stSidebar"] {
-    background: #1C1035;
+    background-color: #1C1035;
 }
-h1,h2,h3,p,label {
+
+h1, h2, h3, p, label {
     color: white !important;
 }
+
 .hero {
     padding: 30px;
     border-radius: 20px;
-    background: linear-gradient(120deg,#7138C8,#A66BEE);
+    background: linear-gradient(120deg, #7138C8, #A66BEE);
     text-align: center;
+    margin-bottom: 20px;
 }
+
 .card {
     background: #352052;
     padding: 22px;
@@ -37,8 +45,9 @@ h1,h2,h3,p,label {
     text-align: center;
     border: 1px solid #7046A5;
 }
+
 div.stButton > button {
-    background: linear-gradient(90deg,#9147E8,#C084FC);
+    background: linear-gradient(90deg, #9147E8, #C084FC);
     color: white;
     border-radius: 12px;
     border: none;
@@ -47,12 +56,15 @@ div.stButton > button {
 </style>
 """, unsafe_allow_html=True)
 
-# LOAD MODEL
+# LOAD TRAINED MODEL
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "Model", "model.pkl")
+
 model = joblib.load(MODEL_PATH)
 
-# NAVIGATION
+# SIDEBAR NAVIGATION
+st.sidebar.title("🎓 Student Prediction")
+
 page = st.sidebar.radio(
     "Navigation",
     ["Home", "Prediction", "About"]
@@ -69,8 +81,6 @@ if page == "Home":
     </div>
     """, unsafe_allow_html=True)
 
-    st.write("")
-
     col1, col2 = st.columns(2)
 
     with col1:
@@ -80,14 +90,16 @@ if page == "Home":
         )
 
     with col2:
-        st.subheader("Welcome to Student Performance Prediction")
+        st.subheader("Welcome to Our System")
+
         st.write("""
-        This system uses Machine Learning to estimate
+        This system uses Machine Learning to predict
         student academic performance.
 
-        Enter academic details and get an instant prediction
-        with interactive visual analysis.
+        Enter student details and receive an estimated
+        final score with visual analysis.
         """)
+
         st.success("AI Powered Academic Analysis")
 
     st.divider()
@@ -97,38 +109,62 @@ if page == "Home":
     a, b, c = st.columns(3)
 
     with a:
-        st.markdown(
-            '<div class="card"><h2>📊</h2><h3>Analytics</h3><p>Interactive charts</p></div>',
-            unsafe_allow_html=True
-        )
+        st.markdown("""
+        <div class="card">
+        <h2>📊</h2>
+        <h3>Analytics</h3>
+        <p>Interactive performance charts</p>
+        </div>
+        """, unsafe_allow_html=True)
 
     with b:
-        st.markdown(
-            '<div class="card"><h2>🤖</h2><h3>Prediction</h3><p>Machine Learning model</p></div>',
-            unsafe_allow_html=True
-        )
+        st.markdown("""
+        <div class="card">
+        <h2>🤖</h2>
+        <h3>Prediction</h3>
+        <p>Machine Learning prediction</p>
+        </div>
+        """, unsafe_allow_html=True)
 
     with c:
-        st.markdown(
-            '<div class="card"><h2>💡</h2><h3>Suggestions</h3><p>Academic improvement tips</p></div>',
-            unsafe_allow_html=True
-        )
+        st.markdown("""
+        <div class="card">
+        <h2>💡</h2>
+        <h3>Suggestions</h3>
+        <p>Academic improvement tips</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 # PREDICTION PAGE
 elif page == "Prediction":
 
     st.title("🔮 Student Performance Prediction")
+
     st.write("Enter student academic details below.")
 
     col1, col2 = st.columns(2)
 
     with col1:
-        study_hours = st.slider("📚 Study Hours", 0.0, 12.0, 5.0, 0.5)
-        attendance = st.slider("📅 Attendance (%)", 0, 100, 80)
+        study_hours = st.slider(
+            "📚 Study Hours",
+            0.0, 12.0, 5.0, 0.5
+        )
+
+        attendance = st.slider(
+            "📅 Attendance (%)",
+            0, 100, 80
+        )
 
     with col2:
-        assignments = st.slider("📝 Assignment Score", 0, 100, 75)
-        previous_score = st.slider("📖 Previous Exam Score", 0, 100, 70)
+        assignments = st.slider(
+            "📝 Assignment Score",
+            0, 100, 75
+        )
+
+        previous_score = st.slider(
+            "📖 Previous Exam Score",
+            0, 100, 70
+        )
 
     if st.button("✨ Predict Final Score", use_container_width=True):
 
@@ -139,43 +175,70 @@ elif page == "Prediction":
             "PreviousScore": [previous_score]
         })
 
-        score = float(model.predict(input_data)[0])
+        prediction = model.predict(input_data)
+        score = float(prediction[0])
 
         st.divider()
+
         st.subheader("🏆 Prediction Result")
 
+        # ANIMATED SCORE
         score_placeholder = st.empty()
 
-        for value in range(0, max(1, int(score)) + 1):
+        target = max(0, min(100, int(score)))
+
+        for value in range(target + 1):
+
             score_placeholder.markdown(
                 f"""
                 <div class="hero">
                     <h3>Predicted Final Score</h3>
-                    <h1>{value:.0f}</h1>
+                    <h1>{value}/100</h1>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
+
             time.sleep(0.015)
 
         st.progress(max(0.0, min(1.0, score / 100)))
 
+        # PERFORMANCE SUGGESTIONS
+        st.subheader("💡 Performance Analysis")
+
         if score >= 80:
             st.success("🌟 Excellent Performance!")
-            suggestion = "Maintain your study routine and continue practicing."
+            suggestion = (
+                "Keep maintaining your study routine. "
+                "Continue practicing and revising regularly."
+            )
+
         elif score >= 60:
             st.info("👍 Good Performance!")
-            suggestion = "Increase revision time and practice more questions."
+            suggestion = (
+                "Increase revision time and practice "
+                "more questions to improve your score."
+            )
+
         elif score >= 40:
             st.warning("⚡ Average Performance")
-            suggestion = "Improve attendance and complete assignments regularly."
+            suggestion = (
+                "Improve attendance, complete assignments "
+                "regularly and follow a daily study schedule."
+            )
+
         else:
             st.error("📚 Needs Improvement")
-            suggestion = "Follow a daily study plan and seek extra academic support."
+            suggestion = (
+                "Focus on regular study, attend classes "
+                "and seek additional academic support."
+            )
 
-        st.subheader("💡 Improvement Suggestions")
         st.write(suggestion)
 
+        st.divider()
+
+        # INTERACTIVE BAR CHART
         st.subheader("📊 Academic Performance Analysis")
 
         chart_data = pd.DataFrame({
@@ -193,20 +256,18 @@ elif page == "Prediction":
             ]
         })
 
-       fig = px.bar(
-    chart_data,
-    x="Academic Factors",
-    y="Values",
-    text="Values",
-    color_discrete_sequence=["#C084FC"]
-)
+        fig = px.bar(
+            chart_data,
+            x="Academic Factors",
+            y="Values",
+            text="Values",
+            color_discrete_sequence=["#C084FC"]
+        )
 
-fig.update_traces(
-    marker_line_color="#E9D5FF",
-    marker_line_width=1,
-    textfont_color="white"
-)
-            ]
+        fig.update_traces(
+            marker_line_color="#E9D5FF",
+            marker_line_width=1,
+            textfont_color="white"
         )
 
         fig.update_layout(
@@ -214,26 +275,35 @@ fig.update_traces(
             yaxis_range=[0, 100],
             showlegend=False,
             paper_bgcolor="#241343",
-            plot_bgcolor="#241343"
+            plot_bgcolor="#241343",
+            font_color="white"
         )
 
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
 
-        gauge = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=score,
-            title={"text": "Predicted Score"},
-            gauge={
-                "axis": {"range": [0, 100]},
-                "bar": {"color": "#C084FC"},
-                "steps": [
-                    {"range": [0, 40], "color": "#512044"},
-                    {"range": [40, 60], "color": "#7046A5"},
-                    {"range": [60, 80], "color": "#8B5CF6"},
-                    {"range": [80, 100], "color": "#A78BFA"}
-                ]
-            }
-        ))
+        # SCORE GAUGE
+        st.subheader("🎯 Final Score Gauge")
+
+        gauge = go.Figure(
+            go.Indicator(
+                mode="gauge+number",
+                value=score,
+                title={"text": "Predicted Score"},
+                gauge={
+                    "axis": {"range": [0, 100]},
+                    "bar": {"color": "#C084FC"},
+                    "steps": [
+                        {"range": [0, 40], "color": "#512044"},
+                        {"range": [40, 60], "color": "#7046A5"},
+                        {"range": [60, 80], "color": "#8B5CF6"},
+                        {"range": [80, 100], "color": "#A78BFA"}
+                    ]
+                }
+            )
+        )
 
         gauge.update_layout(
             template="plotly_dark",
@@ -241,7 +311,34 @@ fig.update_traces(
             font_color="white"
         )
 
-        st.plotly_chart(gauge, use_container_width=True)
+        st.plotly_chart(
+            gauge,
+            use_container_width=True
+        )
+
+        # STUDENT DETAILS
+        st.subheader("📋 Student Details")
+
+        result_df = pd.DataFrame({
+            "Parameter": [
+                "Study Hours",
+                "Attendance",
+                "Assignment Score",
+                "Previous Exam Score"
+            ],
+            "Value": [
+                study_hours,
+                f"{attendance}%",
+                assignments,
+                previous_score
+            ]
+        })
+
+        st.dataframe(
+            result_df,
+            use_container_width=True,
+            hide_index=True
+        )
 
 # ABOUT PAGE
 elif page == "About":
@@ -257,16 +354,25 @@ elif page == "About":
     Student Performance Prediction System is a
     Machine Learning based academic prediction application.
 
-    It uses four academic factors:
+    The system uses four academic factors:
 
     - Study Hours
     - Attendance
     - Assignment Score
     - Previous Exam Score
 
-    Technology Used:
-    Python, Streamlit, Pandas, Scikit-learn and Plotly.
+    Technologies Used:
+
+    - Python
+    - Streamlit
+    - Pandas
+    - Scikit-learn
+    - Plotly
     """)
 
+# FOOTER
 st.divider()
-st.caption("🎓 Student Performance Prediction System | College Project")
+
+st.caption(
+    "🎓 Student Performance Prediction System | College Project"
+)
