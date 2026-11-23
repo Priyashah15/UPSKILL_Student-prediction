@@ -14,27 +14,20 @@ st.set_page_config(
     layout="wide"
 )
 
-# PINK AND PURPLE THEME
+# COMPLETE PINK PURPLE THEME
 st.markdown("""
 <style>
 
 .stApp {
     background: linear-gradient(
-        135deg,
-        #2B0A3D,
-        #59145E,
-        #8A216F,
-        #45105D
+        135deg, #24072F, #50104F, #781B67, #321044
     );
     color: #FFD6F5;
 }
 
 [data-testid="stSidebar"] {
     background: linear-gradient(
-        180deg,
-        #351044,
-        #70205F,
-        #4B155C
+        180deg, #351044, #70205F, #4B155C
     );
 }
 
@@ -44,22 +37,17 @@ h1, h2, h3, h4, p, label {
 
 .hero {
     background: linear-gradient(
-        120deg,
-        #8E287F,
-        #D946A6,
-        #9235B8
+        120deg, #8E287F, #D946A6, #9235B8
     );
     padding: 30px;
     border-radius: 22px;
     text-align: center;
-    border: 1px solid #F472C5;
+    border: 2px solid #F472C5;
 }
 
 .card {
     background: linear-gradient(
-        135deg,
-        #65205F,
-        #A32C83
+        135deg, #65205F, #A32C83
     );
     padding: 22px;
     border-radius: 18px;
@@ -69,51 +57,54 @@ h1, h2, h3, h4, p, label {
 
 div.stButton > button {
     background: linear-gradient(
-        90deg,
-        #C02691,
-        #9333EA,
-        #DB2777
-    );
-    color: #FFE4F5;
-    border: 1px solid #F472C5;
+        90deg, #C02691, #9333EA, #DB2777
+    ) !important;
+    color: #FFE4F5 !important;
+    border: 1px solid #F472C5 !important;
     border-radius: 14px;
     font-weight: bold;
 }
 
 div.stButton > button:hover {
     background: linear-gradient(
-        90deg,
-        #DB2777,
-        #A855F7
-    );
-    color: #FFFFFF;
+        90deg, #DB2777, #A855F7
+    ) !important;
+    color: #FFFFFF !important;
 }
 
-[data-testid="stMetric"] {
-    background: #64205F;
-    padding: 15px;
-    border-radius: 14px;
-    border: 1px solid #D946A6;
+[data-testid="stProgressBar"] > div {
+    background: #65205F;
 }
 
 [data-testid="stProgressBar"] > div > div {
     background: linear-gradient(
-        90deg,
-        #DB2777,
-        #C084FC
+        90deg, #DB2777, #C084FC
     );
+}
+
+[data-testid="stAlert"] {
+    background: linear-gradient(
+        120deg, #581C65, #9D267D
+    ) !important;
+    border: 2px solid #D946A6 !important;
+    border-radius: 15px;
+}
+
+[data-testid="stAlert"] p {
+    color: #FFD6F5 !important;
+}
+
+[data-testid="stSlider"] {
+    color: #F472B6;
 }
 
 hr {
     border-color: #C02691;
 }
 
-[data-testid="stSlider"] [role="slider"] {
-    background-color: #EC4899;
-}
-
 </style>
 """, unsafe_allow_html=True)
+
 
 # LOAD TRAINED MODEL
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -121,13 +112,15 @@ MODEL_PATH = os.path.join(BASE_DIR, "Model", "model.pkl")
 
 model = joblib.load(MODEL_PATH)
 
-# SIDEBAR NAVIGATION
+
+# SIDEBAR
 st.sidebar.title("🎓 Student Prediction")
 
 page = st.sidebar.radio(
     "Navigation",
     ["Home", "Prediction", "About"]
 )
+
 
 # HOME PAGE
 if page == "Home":
@@ -165,7 +158,12 @@ if page == "Home":
         that need improvement.
         """)
 
-        st.success("AI Powered Academic Analysis")
+        st.markdown("""
+        <div class="card">
+            <h3>💗 AI Powered Academic Analysis</h3>
+            <p>Smart prediction for better learning.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
     st.divider()
 
@@ -199,6 +197,7 @@ if page == "Home":
             <p>Academic improvement tips</p>
         </div>
         """, unsafe_allow_html=True)
+
 
 # PREDICTION PAGE
 elif page == "Prediction":
@@ -277,50 +276,66 @@ elif page == "Prediction":
             max(0.0, min(1.0, score / 100))
         )
 
-        # PERFORMANCE SUGGESTIONS
-        st.subheader("💡 Performance Analysis")
+        # PERFORMANCE ANALYSIS
+        st.subheader("💗 Performance Analysis")
 
         if score >= 80:
-
-            st.success("🌟 Excellent Performance!")
-
-            suggestion = """
-            Keep maintaining your study routine.
-            Continue practicing and revising regularly.
-            """
+            performance = "🌟 Excellent Performance!"
+            suggestion = (
+                "Keep maintaining your study routine. "
+                "Continue practicing and revising regularly."
+            )
+            color = "#DB2777"
 
         elif score >= 60:
-
-            st.info("👍 Good Performance!")
-
-            suggestion = """
-            Increase revision time and practice
-            more questions to improve your score.
-            """
+            performance = "💗 Good Performance!"
+            suggestion = (
+                "Increase revision time and practice "
+                "more questions to improve your score."
+            )
+            color = "#C026D3"
 
         elif score >= 40:
-
-            st.warning("⚡ Average Performance")
-
-            suggestion = """
-            Improve attendance, complete assignments
-            regularly and follow a daily study schedule.
-            """
+            performance = "💜 Average Performance"
+            suggestion = (
+                "Improve attendance, complete assignments "
+                "regularly and follow a daily study schedule."
+            )
+            color = "#9333EA"
 
         else:
+            performance = "📚 Needs Improvement"
+            suggestion = (
+                "Focus on regular study, attend classes "
+                "and seek additional academic support."
+            )
+            color = "#BE185D"
 
-            st.error("📚 Needs Improvement")
-
-            suggestion = """
-            Focus on regular study, attend classes
-            and seek additional academic support.
-            """
-
+        # COLOURED PERFORMANCE CARD
         st.markdown(
             f"""
-            <div class="card">
-                <h3>💗 Your Improvement Plan</h3>
-                <p>{suggestion}</p>
+            <div style="
+                background: linear-gradient(
+                    120deg, #581C65, #9D267D, #701A75
+                );
+                border: 2px solid {color};
+                border-radius: 20px;
+                padding: 28px;
+                text-align: center;
+                margin: 15px 0;
+            ">
+                <h2 style="
+                    color: #FFD6F5 !important;
+                    font-size: 27px;
+                ">
+                    {performance}
+                </h2>
+                <p style="
+                    color: #FFD6F5 !important;
+                    font-size: 17px;
+                ">
+                    {suggestion}
+                </p>
             </div>
             """,
             unsafe_allow_html=True
@@ -396,7 +411,7 @@ elif page == "Prediction":
             use_container_width=True
         )
 
-        # PINK AND PURPLE GAUGE
+        # SCORE GAUGE
         st.subheader("🎯 Final Score Gauge")
 
         gauge = go.Figure(
@@ -405,14 +420,10 @@ elif page == "Prediction":
                 value=score,
                 title={
                     "text": "Predicted Score",
-                    "font": {
-                        "color": "#FFD6F5"
-                    }
+                    "font": {"color": "#FFD6F5"}
                 },
                 number={
-                    "font": {
-                        "color": "#F472B6"
-                    }
+                    "font": {"color": "#F472B6"}
                 },
                 gauge={
                     "axis": {
@@ -480,6 +491,7 @@ elif page == "Prediction":
             hide_index=True
         )
 
+
 # ABOUT PAGE
 elif page == "About":
 
@@ -509,6 +521,7 @@ elif page == "About":
     - Scikit-learn
     - Plotly
     """)
+
 
 # FOOTER
 st.divider()
